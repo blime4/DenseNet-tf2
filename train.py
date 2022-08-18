@@ -33,20 +33,22 @@ def main():
     y = np.concatenate([y_train, y_test], axis=0)
 
     # blime : To be fast, the dataset is shrunk by a factor of SCALE
-    SCALE = 30
+    SCALE = 1
     x = x[:len(x)//SCALE]
     y = y[:len(y)//SCALE]
 
     (x_train, y_train), (x_validation, y_validation), (x_test, y_test) = split(x, y, ratio1, ratio2)
 
+    # tf.profiler.experimental.start('dl-logdir')
     model.fit(x_train, y_train,
               epochs=epochs,
               verbose=1,
               validation_data=(x_validation, y_validation))
+    # tf.profiler.experimental.stop()
 
-    score = model.evaluate(x_test, y_test)
-    print('Test loss of model:', score[0])
-    print('Test accuracy of model:', score[1])
+    # score = model.evaluate(x_test, y_test)
+    # print('Test loss of model:', score[0])
+    # print('Test accuracy of model:', score[1])
 
 
 if __name__ == "__main__":
