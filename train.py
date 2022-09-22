@@ -1,6 +1,10 @@
+import os
+os.environ['CUDA_VISIBLE_DEVICES'] = "1"
+os.environ['TF_FORCE_GPU_ALLOW_GROWTH']="true"
+
+import tensorflow as tf
 from model import DenseNet
 from tensorflow.keras.datasets import cifar10
-import tensorflow as tf
 import numpy as np
 
 # parameter
@@ -39,11 +43,21 @@ def main():
 
     (x_train, y_train), (x_validation, y_validation), (x_test, y_test) = split(x, y, ratio1, ratio2)
 
-    # tf.profiler.experimental.start('dl-logdir')
+
+    tf.config.optimizer.set_experimental_options({
+        'layout_optimizer': False,
+    })
+    # tf.profiler.experimental.start('nv-logdir-825')
+    print(tf.config.optimizer.get_experimental_options())
+    log_dir="dl-matmul-001"
+    tb_callback = tf.keras.callbacks.TensorBoard(log_dir=log_dir,
+                                             profile_batch='10, 15')
     model.fit(x_train, y_train,
               epochs=epochs,
               verbose=1,
-              validation_data=(x_validation, y_validation))
+              validation_data=(x_validation, y_validation)
+              ,
+              callbacks=[tb_callback])
     # tf.profiler.experimental.stop()
 
     # score = model.evaluate(x_test, y_test)

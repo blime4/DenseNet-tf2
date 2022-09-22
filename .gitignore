@@ -1,5 +1,7 @@
 __pycache__
 xxx
 yyy
-*-dump
-*-logdir
+*-dump*
+*-logdir*
+old
+dl-matmul-001
